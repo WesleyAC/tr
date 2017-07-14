@@ -4,12 +4,16 @@ extern crate nalgebra;
 use image::RgbImage;
 use nalgebra::{Vector3, norm_squared};
 
+trait Object {
+    fn intersect(self, ray: Ray) -> bool;
+}
+
 struct Sphere {
     origin: Vector3<f64>,
     diameter: f64
 }
 
-impl Sphere {
+impl Object for Sphere {
     fn intersect(self, ray: Ray) -> bool {
         let l = &ray.origin - &self.origin;
         let tca = l.dot(&ray.direction);
