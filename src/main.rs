@@ -1,31 +1,16 @@
 extern crate image;
 extern crate nalgebra;
 
+mod scene;
+mod object;
+mod ray;
+
 use image::RgbImage;
-use nalgebra::{Vector3, norm_squared};
+use nalgebra::Vector3;
 
-trait Object {
-    fn intersect(self, ray: Ray) -> bool;
-}
-
-struct Sphere {
-    origin: Vector3<f64>,
-    diameter: f64
-}
-
-impl Object for Sphere {
-    fn intersect(self, ray: Ray) -> bool {
-        let l = &ray.origin - &self.origin;
-        let tca = l.dot(&ray.direction);
-        let d2 = norm_squared(&l) - (tca * tca);
-        d2 < self.diameter
-    }
-}
-
-struct Ray {
-    origin: Vector3<f64>,
-    direction: Vector3<f64>
-}
+use ray::Ray;
+use object::Sphere;
+use object::Object;
 
 fn trace(ray: Ray) -> [u8; 3] {
     let thing = Sphere { origin: Vector3::new(0.0, 0.0, -5.0), diameter: 0.3 };
