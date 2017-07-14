@@ -1,5 +1,5 @@
 use object::Object;
 
-struct Scene<'a> {
-    objects: Vec<&'a Object>
+pub struct Scene<'a> {
+    pub objects: Vec<&'a Object>
 }
