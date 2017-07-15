@@ -13,12 +13,16 @@ use scene::Scene;
 use object::Sphere;
 
 fn trace(ray: Ray, scene: &Scene) -> [u8; 3] {
+    let min_dist = std::f64::INFINITY;
+    let mut val = [0, 0, 0];
     for object in &scene.objects {
-        if object.intersect(ray) {
-            return [255, 255, 255];
+        let dist = object.intersect(ray);
+        if dist.unwrap_or(std::f64::INFINITY) < min_dist {
+            let color = (dist.unwrap() * 2000.0 - 1500.0) as u8;
+            val = [color, color, color];
         }
     }
-    [0, 0, 0]
+    val
 }
 
 /// x is scaled from -0.5 to 0.5, y is scaled by same factor
@@ -41,8 +45,8 @@ fn render_image(width: u32, height: u32, scene: Scene) {
 }
 
 fn main() {
-    let thing1 = Sphere { origin: Vector3::new(0.0, 0.0, -5.0), diameter: 0.3 };
-    let thing2 = Sphere { origin: Vector3::new(-0.4, 0.2, -3.0), diameter: 0.3 };
+    let thing1 = Sphere { origin: Vector3::new(-0.5, 0.4, -3.0), diameter: 0.7 };
+    let thing2 = Sphere { origin: Vector3::new(0.0, 0.0, -2.0), diameter: 0.7 };
     let scene = Scene { objects: vec![&thing1, &thing2] };
     render_image(400, 300, scene);
 }
