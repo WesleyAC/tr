@@ -1,4 +1,4 @@
-use nalgebra::{Vector3, norm_squared};
+use nalgebra::Vector3;
 
 use ray::Ray;
 
@@ -13,23 +13,19 @@ pub struct Sphere {
 
 impl Object for Sphere {
     fn intersect(&self, ray: Ray) -> Option<f64> {
-        let l = &ray.origin - &self.origin;
-        let adj = l.dot(&ray.direction);
-        let intersect_dist2 = norm_squared(&l) - (adj * adj);
-        let radius2 = (self.diameter / 2.0) * (self.diameter / 2.0);
-        if intersect_dist2 > radius2 {
-            return None
-        }
-        let outer_dist = (adj - intersect_dist2).sqrt();
-        let i1 = adj - outer_dist;
-        let i2 = adj + outer_dist;
-        if i1 < 0.0 && i2 < 0.0 {
+        let dist = &ray.origin - self.origin;
+        let b = 2.0 * &ray.direction.dot(&dist);
+        let c = &dist.dot(&dist) - (self.diameter / 2.0).powi(2);
+        let desc = b*b - 4.0*c;
+        if desc < 0.0 {
             None
         } else {
-            if i1 < i2 {
-                Some(i1)
+            if desc == 0.0 {
+                Some(-b / 2.0)
             } else {
-                Some(i2)
+                let i1 = (-b + desc.sqrt()) / 2.0;
+                let i2 = (-b - desc.sqrt()) / 2.0;
+                Some(f64::min(i1, i2))
             }
         }
     }

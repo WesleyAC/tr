@@ -15,13 +15,14 @@ use object::Sphere;
 use color::Color;
 
 fn trace(ray: Ray, scene: &Scene) -> Color {
-    let min_dist = std::f64::INFINITY;
+    let mut min_dist = std::f64::INFINITY;
     let mut color = Color::new(0.0, 0.0, 0.0);
     for object in &scene.objects {
         let dist = object.intersect(ray);
         if dist.unwrap_or(std::f64::INFINITY) < min_dist {
-            let object_color = (dist.unwrap() / 4.0);
+            let object_color = dist.unwrap() / 2.0;
             color.set_color(object_color, object_color, object_color);
+            min_dist = dist.unwrap();
         }
     }
     color
@@ -47,8 +48,8 @@ fn render_image(width: u32, height: u32, scene: Scene) {
 }
 
 fn main() {
-    let thing1 = Sphere { origin: Vector3::new(-0.5, 0.4, -3.0), diameter: 0.7 };
-    let thing2 = Sphere { origin: Vector3::new(0.0, 0.0, -2.0), diameter: 0.7 };
+    let thing1 = Sphere { origin: Vector3::new(0.0, 0.0, 3.0), diameter: 1.0 };
+    let thing2 = Sphere { origin: Vector3::new(1.7, 0.5, 5.0), diameter: 1.0 };
     let scene = Scene { objects: vec![&thing1, &thing2] };
     render_image(400, 300, scene);
 }
