@@ -34,8 +34,8 @@ fn pixel_color(x: f64, y: f64, scene: &Scene) -> [u8; 3] {
 
 fn render_image(width: u32, height: u32, scene: Scene) {
     let mut image = RgbImage::new(width, height);
-    for x in 0..width {
-        for y in 0..height {
+    for y in 0..height {
+        for x in 0..width {
             let xs = (x as f64 / width as f64) - 0.5;
             let ys = (y as f64 / width as f64) - ((0.5 * height as f64) / width as f64);
             image.get_pixel_mut(x, y).data = pixel_color(xs, ys, &scene);
